@@ -44,9 +44,9 @@ const projects = [
     category: "tools",
     status: "personal",
     logo: "assets/kb-logo.webp",
-    description: "A personal Windows desktop application created to configure mouse acceleration curves, manage game profiles, and run aim practice tests.",
-    contribution: "I developed the Windows desktop application in C# with WinForms/WPF, built the graphical curve editor and profile system, and integrated it with the Raw Accel driver.",
-    stack: ["C#", ".NET", "WinForms", "WPF"],
+    description: "A personal Windows desktop application created to configure mouse acceleration curves, manage game profiles, run aim practice tests, and tune settings with an AI assistant powered by the Google Gemini API.",
+    contribution: "I developed the Windows desktop application in C# with WinForms/WPF, built the curve editor, integrated the Gemini API with Windows DPAPI encryption for natural-language tuning, and implemented driver parameter validation.",
+    stack: ["C#", "WPF / WinForms", "Gemini API", "Windows DPAPI", ".NET"],
     demo: null,
     source: "https://github.com/black-knight21/KaidenFlux"
   }

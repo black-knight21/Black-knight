@@ -30,22 +30,24 @@ const projects = [
     type: "Personal Project",
     category: "uiux",
     status: "personal",
-    description: "A personal portfolio website created to present my skills, projects, education, and development work.",
+    logo: "assets/kb-logo.webp",
+    description: "A personal portfolio website created to present my skills, projects, and development work.",
     contribution: "I designed and developed the portfolio structure, organised the content, built the page layout, and worked on making the website clear and responsive.",
     stack: ["HTML", "CSS", "JavaScript"],
     demo: "https://black-knight21.github.io/Black-knight/",
-    source: null
+    source: "https://github.com/black-knight21/Black-knight"
   },
   {
     id: 4,
-    title: "C# Windows Application",
+    title: "KaidenFlux",
     type: "Personal Project",
     category: "tools",
     status: "personal",
-    description: "A personal Windows desktop application created to practise C# programming and desktop software development.",
-    contribution: "I developed the application and worked on its interface, functionality, testing, and troubleshooting.",
-    stack: ["C#"],
+    logo: "assets/kb-logo.webp",
+    description: "A personal Windows desktop application created to configure mouse acceleration curves, manage game profiles, and run aim practice tests.",
+    contribution: "I developed the Windows desktop application in C# with WinForms/WPF, built the graphical curve editor and profile system, and integrated it with the Raw Accel driver.",
+    stack: ["C#", ".NET", "WinForms", "WPF"],
     demo: null,
-    source: null
+    source: "https://github.com/black-knight21/KaidenFlux"
   }
 ];

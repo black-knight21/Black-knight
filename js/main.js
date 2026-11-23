@@ -58,7 +58,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     card.innerHTML = `
       <div class="card-header">
-        <span class="status-badge status-personal">Personal Project</span>
+        <div style="display: flex; align-items: center; gap: 0.6rem;">
+          ${project.logo ? `<img src="${project.logo}" alt="${project.title} logo" width="26" height="26" style="border-radius: 6px; object-fit: contain; background: rgba(139,92,246,0.12); border: 1px solid rgba(139,92,246,0.3); padding: 2px;" />` : ""}
+          <span class="status-badge status-personal">Personal Project</span>
+        </div>
         <span class="card-category-label">${categoryLabel[project.category] || project.category}</span>
       </div>
       <h3 class="card-title">${project.title}</h3>
@@ -80,7 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
       card.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
     });
 
-    // Open project demo in a new tab if a live link exists
+    // Open project link in a new tab
     if (hasLiveDemo) {
       card.addEventListener("click", () => {
         window.open(project.demo, "_blank", "noopener,noreferrer");
@@ -90,6 +93,17 @@ document.addEventListener("DOMContentLoaded", () => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
           window.open(project.demo, "_blank", "noopener,noreferrer");
+        }
+      });
+    } else if (hasSource) {
+      card.addEventListener("click", () => {
+        window.open(project.source, "_blank", "noopener,noreferrer");
+      });
+
+      card.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          window.open(project.source, "_blank", "noopener,noreferrer");
         }
       });
     } else {

@@ -329,14 +329,16 @@ function initSummonModal() {
     statusEl.textContent = "";
 
     try {
-      const res = await fetch("https://formsubmit.co/ajax/yanisjr16@gmail.com", {
+      const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/json",
         },
         body: JSON.stringify({
-          _subject: `Portfolio Summon: ${project}`,
+          access_key: "4706f7b0-e7ee-4763-bc09-171d3f0e53fe",
+          subject: `Portfolio Summon: ${project}`,
+          from_name: sender,
           name: sender,
           project,
           message: details,
@@ -344,9 +346,7 @@ function initSummonModal() {
       });
 
       const result = await res.json().catch(() => ({}));
-      if (!res.ok || (result.success !== "true" && result.success !== true)) {
-        statusEl.textContent = result.message || "Could not send summon. Opening email client…";
-        if (String(result.message || "").toLowerCase().includes("activation")) return;
+      if (!res.ok || !result.success) {
         throw new Error(result.message || "Request failed");
       }
       statusEl.textContent = "Summon sent! Thank you — I will reply soon.";

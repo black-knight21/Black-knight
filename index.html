@@ -24,7 +24,7 @@
   }
   </script>
 
-  <link rel="stylesheet" href="styles.css?v=3" />
+  <link rel="stylesheet" href="styles.css?v=4" />
 </head>
 <body>
 
@@ -246,8 +246,8 @@
         <p class="grace-tagline">Open to junior front-end, web, and creative-development opportunities.</p>
         <a href="mailto:yanisjr16@gmail.com" class="grace-email">yanisjr16@gmail.com</a>
         <div class="grace-ctas">
-          <button id="copy-email-btn" class="btn btn-gold" aria-label="Copy email address" aria-live="polite">
-            Summon / Copy Email
+          <button id="summon-btn" class="btn btn-gold" aria-label="Open summon form">
+            Summon
           </button>
           <a href="https://github.com/black-knight21" target="_blank" rel="noopener" class="btn btn-glass">GitHub ↗</a>
         </div>
@@ -259,6 +259,35 @@
 
   </main><!-- /#root -->
 
-  <script type="module" src="js/main.js?v=3"></script>
+  <!-- Summon Modal Card -->
+  <div id="summon-modal" class="summon-modal" role="dialog" aria-modal="true" aria-labelledby="summon-title" aria-hidden="true">
+    <div class="summon-backdrop" data-close-summon></div>
+    <div class="summon-card">
+      <button type="button" class="summon-close" data-close-summon aria-label="Close summon card">✕</button>
+      <p class="eyebrow">Summon Sign · Dispatch</p>
+      <h2 id="summon-title" class="summon-title">Summon Black Knight</h2>
+      <div class="lore-divider" aria-hidden="true"></div>
+      <form id="summon-form" class="summon-form">
+        <label class="summon-field">
+          <span>Your Name or Email</span>
+          <input type="text" name="sender" required placeholder="e.g. Alex · alex@studio.com" autocomplete="email" />
+        </label>
+        <label class="summon-field">
+          <span>Project</span>
+          <input type="text" name="project" required placeholder="e.g. Interactive Web App, UI Redesign" />
+        </label>
+        <label class="summon-field">
+          <span>Project Description &amp; Ideas</span>
+          <textarea name="details" rows="4" required placeholder="Share your project idea, goals, or timeline…"></textarea>
+        </label>
+        <p id="summon-status" class="summon-status" role="status" aria-live="polite"></p>
+        <div class="summon-actions">
+          <button type="submit" id="summon-submit" class="btn btn-gold">Send Summon</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script type="module" src="js/main.js?v=4"></script>
 </body>
 </html>

@@ -1081,6 +1081,130 @@ section, footer {
   opacity: 0.6;
 }
 
+/* ── Summon Modal Card ── */
+.summon-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 220;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-lg);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.summon-modal.is-open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.summon-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(8px);
+}
+
+.summon-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 500px;
+  background: rgba(16, 13, 10, 0.96);
+  border: 1px solid rgba(212, 175, 55, 0.5);
+  border-radius: var(--radius);
+  box-shadow: 0 0 50px rgba(212, 175, 55, 0.14), inset 0 0 60px rgba(212, 175, 55, 0.04);
+  padding: var(--sp-xl);
+  transform: translateY(10px) scale(0.98);
+  transition: transform 0.25s ease;
+}
+
+.summon-modal.is-open .summon-card {
+  transform: translateY(0) scale(1);
+}
+
+.summon-close {
+  position: absolute;
+  top: var(--sp-md);
+  right: var(--sp-md);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: var(--muted);
+  font-size: 1rem;
+  display: grid;
+  place-items: center;
+  transition: color 0.2s, background 0.2s;
+}
+.summon-close:hover {
+  color: var(--gold);
+  background: var(--gold-dim);
+}
+
+.summon-title {
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--parchment);
+  margin-top: var(--sp-xs);
+}
+
+.summon-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-md);
+}
+
+.summon-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-xs);
+}
+
+.summon-field span {
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.summon-field input,
+.summon-field textarea {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  color: var(--parchment);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  resize: vertical;
+}
+
+.summon-field input:focus,
+.summon-field textarea:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 2px var(--gold-dim);
+}
+
+.summon-status {
+  min-height: 1.2em;
+  font-size: 0.85rem;
+  color: var(--gold-bright);
+}
+
+.summon-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
 /* ── Reduced motion ── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

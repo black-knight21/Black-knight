@@ -275,25 +275,70 @@ function initToggle3D() {
   });
 }
 
-// ─── Copy email ─────────────────────────────────────────────────
-function initCopyEmail() {
-  const btn = $("#copy-email-btn");
-  if (!btn) return;
+// ─── Summon modal & email dispatch ──────────────────────────────
+function initSummonModal() {
+  const openBtn = $("#summon-btn");
+  const modal = $("#summon-modal");
+  const form = $("#summon-form");
+  const statusEl = $("#summon-status");
+  const submitBtn = $("#summon-submit");
+  if (!openBtn || !modal || !form) return;
 
-  btn.addEventListener("click", async () => {
+  const setOpen = (open) => {
+    modal.classList.toggle("is-open", open);
+    modal.setAttribute("aria-hidden", open ? "false" : "true");
+    if (open) {
+      statusEl.textContent = "";
+      form.querySelector("input")?.focus();
+    }
+  };
+
+  openBtn.addEventListener("click", () => setOpen(true));
+  modal.querySelectorAll("[data-close-summon]").forEach((el) => {
+    el.addEventListener("click", () => setOpen(false));
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && modal.classList.contains("is-open")) setOpen(false);
+  });
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const data = new FormData(form);
+    const sender = String(data.get("sender") || "").trim();
+    const project = String(data.get("project") || "").trim();
+    const details = String(data.get("details") || "").trim();
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Sending Summon…";
+    statusEl.textContent = "";
+
     try {
-      await navigator.clipboard.writeText("yanisjr16@gmail.com");
-      const original = btn.textContent;
-      btn.textContent = "Email Copied ✓";
-      btn.setAttribute("aria-label", "Email address copied");
-      setTimeout(() => {
-        btn.textContent = original;
-        btn.setAttribute("aria-label", "Copy email address");
-      }, 2000);
+      const res = await fetch("https://formsubmit.co/ajax/yanisjr16@gmail.com", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+        body: JSON.stringify({
+          _subject: `Portfolio Summon: ${project}`,
+          from: sender,
+          project,
+          message: details,
+        }),
+      });
+
+      if (!res.ok) throw new Error("Request failed");
+      statusEl.textContent = "Summon sent! Thank you — I will reply soon.";
+      form.reset();
+      setTimeout(() => setOpen(false), 1800);
     } catch {
-      // Fallback: select the email link
-      const emailLink = $(".grace-email");
-      if (emailLink) window.location.href = emailLink.href;
+      const subject = encodeURIComponent(`Portfolio Summon: ${project}`);
+      const body = encodeURIComponent(`From: ${sender}\nProject: ${project}\n\n${details}`);
+      window.location.href = `mailto:yanisjr16@gmail.com?subject=${subject}&body=${body}`;
+      statusEl.textContent = "Opening your email client to send the summon…";
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Send Summon";
     }
   });
 }
@@ -305,4 +350,4 @@ initSectionObserver();
 updateNavLinks("hero");
 updateRunePips("hero");
 initToggle3D();
-initCopyEmail();
+initSummonModal();

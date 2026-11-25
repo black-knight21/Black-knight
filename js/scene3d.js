@@ -99,21 +99,34 @@ export function createArenaScene(canvas, { onProgress, onReady, onImpact }) {
     pointer: { x: 0, y: 0 },
     clashTimer: 0,
     frame: 0,
-    _eu: new THREE.Euler(), // scratch Euler — reused
     obsidianAlpha: 0,
+    ivoryRotY: 0,
+    obsRotY: 0,
     ivoryPivot: null,
     obsPivot: null,
   };
 
-  // Target positions per section
-  const IVORY_X = { hero: 0, lore: 1.65, projects: 2.0, skills: 1.2, contact: 1.35 };
-  const OBS_X   = { hero: 0, lore: -1.65, projects: -2.0, skills: -2.0, contact: -1.35 };
+  // Target positions & facing per section (X, Z depth, and Y rotation)
+  const IVORY_POSE = {
+    hero:     { x:  0.00, z:  0.40, rotY:  0.00 },
+    lore:     { x:  1.55, z: -0.40, rotY: -0.35 },
+    projects: { x:  1.85, z: -0.30, rotY: -0.45 },
+    skills:   { x:  1.15, z:  1.15, rotY: -0.25 },
+    contact:  { x:  1.25, z:  0.35, rotY: -0.75 },
+  };
+  const OBS_POSE = {
+    hero:     { x:  0.00, z: -2.60, rotY:  0.00 },
+    lore:     { x: -1.55, z: -0.40, rotY:  0.35 },
+    projects: { x: -1.75, z:  0.85, rotY:  0.55 },
+    skills:   { x: -1.85, z: -1.45, rotY:  0.25 },
+    contact:  { x: -1.25, z:  0.35, rotY:  0.75 },
+  };
   const CAM = {
-    hero:     { pos: [0, 1.85, 5.6],  look: [0, 1.25, 0] },
-    lore:     { pos: [0, 1.70, 6.0],  look: [0, 1.25, 0] },
-    projects: { pos: [0, 1.05, 6.6],  look: [0, 1.45, 0] },
-    skills:   { pos: [-1.0, 1.55, 5.0], look: [0.4, 1.35, 0] },
-    contact:  { pos: [0, 1.75, 5.0],  look: [0, 0.85, 0] },
+    hero:     { pos: [0,    1.85, 5.6],  look: [0,   1.25, 0] },
+    lore:     { pos: [0,    1.70, 6.0],  look: [0,   1.25, 0] },
+    projects: { pos: [0,    1.15, 6.5],  look: [0,   1.40, 0] },
+    skills:   { pos: [-0.9, 1.55, 5.2],  look: [0.3, 1.35, 0] },
+    contact:  { pos: [0,    1.75, 5.0],  look: [0,   0.95, 0] },
   };
   const VIOLET_I = { hero: 0, lore: 5, projects: 13, skills: 9, contact: 6 };
   const OBS_FILL_I = { hero: 0, lore: 4.5, projects: 9.5, skills: 7, contact: 4.5 };
@@ -208,49 +221,59 @@ export function createArenaScene(canvas, { onProgress, onReady, onImpact }) {
     animId = requestAnimationFrame(animate);
     if (state.mode === "paused") return;
 
-    const dt = Math.min((now - lastTime) / 1000, 0.1);
+    const dt = Math.min((now - lastTime) / 1000, 0.033);
     lastTime = now;
     state.frame++;
     const f = state.frame;
 
     const sec = state.section;
     const camCfg = CAM[sec] || CAM.hero;
+    const ivoryCfg = IVORY_POSE[sec] || IVORY_POSE.hero;
+    const obsCfg = OBS_POSE[sec] || OBS_POSE.hero;
 
     // ── Camera lerp (pull back slightly on portrait mobile so both knights fit) ──
     const isPortrait = camera.aspect < 1;
     const zScale = isPortrait ? Math.min(1.45, 0.9 / Math.max(camera.aspect, 0.45)) : 1;
     const xScale = isPortrait ? 0.65 : 1;
-    const camT = 1 - Math.exp(-2.4 * dt);
+    const camT = 1 - Math.exp(-3.0 * dt);
     const px = state.pointer.x * 0.12;
     const py = state.pointer.y * 0.07;
     lerpV3(camera.position, camCfg.pos[0] * xScale + px, camCfg.pos[1] + py, camCfg.pos[2] * zScale, camT);
     lerpV3(camLookCurrent, camCfg.look[0] * xScale, camCfg.look[1], camCfg.look[2], camT);
     camera.lookAt(camLookCurrent);
 
-    // ── Clash animation ──
-    let ivoryXTarget = (IVORY_X[sec] ?? 0) * xScale;
-    let obsXTarget   = (OBS_X[sec] ?? 0) * xScale;
+    // ── Clash animation (smooth ease-in-out surge) ──
+    let ivoryXTarget = ivoryCfg.x * xScale;
+    let ivoryZTarget = ivoryCfg.z;
+    let obsXTarget   = obsCfg.x * xScale;
+    let obsZTarget   = obsCfg.z;
 
     if (state.clashTimer > 0) {
-      state.clashTimer -= dt;
-      const surge = Math.sin((1 - state.clashTimer / 1.1) * Math.PI);
-      ivoryXTarget  =  lerp(ivoryXTarget,  0.6, surge);
-      obsXTarget    = lerp(obsXTarget, -0.6, surge);
+      state.clashTimer = Math.max(0, state.clashTimer - dt);
+      const p = Math.sin((1 - state.clashTimer / 1.1) * Math.PI);
+      const surge = p * p;
+      ivoryXTarget = lerp(ivoryXTarget,  0.65 * xScale, surge);
+      ivoryZTarget = lerp(ivoryZTarget,  0.55, surge);
+      obsXTarget   = lerp(obsXTarget,   -0.65 * xScale, surge);
+      obsZTarget   = lerp(obsZTarget,    0.55, surge);
     }
 
     // ── Obsidian alpha ──
     const obsWant = sec === "hero" ? 0 : 1;
     state.obsidianAlpha = lerp(state.obsidianAlpha, obsWant, 1 - Math.exp(-4.5 * dt));
-    if (state.obsidianAlpha > 0.005) {
-      obsPivot.visible = true;
-    } else {
-      obsPivot.visible = false;
-    }
+    obsPivot.visible = state.obsidianAlpha > 0.005;
 
-    // ── Knight positions ──
-    const kT = 1 - Math.exp(-2.0 * dt);
+    // ── Smooth knight positions, depth, and facing (no fighting rotations) ──
+    const kT = 1 - Math.exp(-3.2 * dt);
+    const t = now * 0.001;
+
     ivoryPivot.position.x = lerp(ivoryPivot.position.x, ivoryXTarget, kT);
-    obsPivot.position.x   = lerp(obsPivot.position.x, obsXTarget, kT);
+    ivoryPivot.position.z = lerp(ivoryPivot.position.z, ivoryZTarget, kT);
+    ivoryPivot.position.y = lerp(ivoryPivot.position.y, Math.sin(t * 1.1) * 0.02, kT);
+
+    obsPivot.position.x = lerp(obsPivot.position.x, obsXTarget, kT);
+    obsPivot.position.z = lerp(obsPivot.position.z, obsZTarget, kT);
+    obsPivot.position.y = lerp(obsPivot.position.y, Math.sin(t * 1.1 + 1.4) * 0.02, kT);
 
     // Obsidian opacity via cached mesh list (disable transparent once opaque for early-Z speed)
     if (obsPivot.visible) {
@@ -264,27 +287,11 @@ export function createArenaScene(canvas, { onProgress, onReady, onImpact }) {
       }
     }
 
-    // Obsidian aggressive animation (bob+twitch on projects)
-    const t = now * 0.001;
-    if (sec === "projects") {
-      obsPivot.position.y = lerp(obsPivot.position.y, Math.sin(t * 2.6) * 0.06, kT);
-      state._eu.set(0, Math.sin(t * 3.1) * 0.05, 0);
-      obsPivot.rotation.copy(state._eu);
-    } else {
-      obsPivot.position.y = lerp(obsPivot.position.y, 0, kT);
-      state._eu.set(0, 0, 0);
-      obsPivot.rotation.copy(state._eu);
-    }
-
-    // Ivory gentle sway
-    state._eu.set(0, Math.sin(t * 0.8) * 0.025, 0);
-    ivoryPivot.rotation.copy(state._eu);
-
-    // Contact: face inward
-    if (sec === "contact") {
-      ivoryPivot.rotation.y = lerp(ivoryPivot.rotation.y, -0.4, kT);
-      obsPivot.rotation.y   = lerp(obsPivot.rotation.y, 0.4, kT);
-    }
+    // Smooth yaw facing + subtle noble sway (single clean write per frame)
+    state.ivoryRotY = lerp(state.ivoryRotY, ivoryCfg.rotY, kT);
+    state.obsRotY   = lerp(state.obsRotY,   obsCfg.rotY,   kT);
+    ivoryPivot.rotation.set(0, state.ivoryRotY + Math.sin(t * 0.75) * 0.03, 0);
+    obsPivot.rotation.set(0,   state.obsRotY   + Math.sin(t * 0.85 + 1.0) * 0.03, 0);
 
     // ── Atmosphere & lighting — every 2nd frame ──
     if (f % 2 === 0) {

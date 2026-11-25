@@ -241,13 +241,14 @@ function initSectionObserver() {
         ratioMap.set(id, entry.intersectionRatio);
       });
 
-      // Pick the most-visible section
+      // Pick the most-visible section with hysteresis so scrolling never flickers
       let bestId = null, bestRatio = -1;
       ratioMap.forEach((ratio, id) => {
         if (ratio > bestRatio) { bestRatio = ratio; bestId = id; }
       });
 
-      if (bestId && bestId !== currentSection) {
+      const currentRatio = ratioMap.get(currentSection) ?? 0;
+      if (bestId && bestId !== currentSection && bestRatio > 0.12 && bestRatio > currentRatio + 0.05) {
         // Map HTML IDs to scene names
         const sceneMap = {
           hero: "hero",

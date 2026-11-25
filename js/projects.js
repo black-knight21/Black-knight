@@ -28,7 +28,7 @@ export const projects = [
       "I designed and developed the WPF dark-theme interface, curve editor workflow, aim practice studio, and Gemini API tuning assistant.",
     stack: ["C#", ".NET", "WPF", "Gemini API", "Git"],
     thumbnailType: "image",
-    thumbnailSrc: "./assets/aimknight-preview.png",
+    thumbnailSrc: "./assets/aimknight-preview.png?v=2",
     thumbnailAlt: "AimKnight desktop application interface preview",
     repoUrl: "https://github.com/black-knight21/AimKnight",
     demoUrl: null,

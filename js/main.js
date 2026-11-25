@@ -337,13 +337,18 @@ function initSummonModal() {
         },
         body: JSON.stringify({
           _subject: `Portfolio Summon: ${project}`,
-          from: sender,
+          name: sender,
           project,
           message: details,
         }),
       });
 
-      if (!res.ok) throw new Error("Request failed");
+      const result = await res.json().catch(() => ({}));
+      if (!res.ok || (result.success !== "true" && result.success !== true)) {
+        statusEl.textContent = result.message || "Could not send summon. Opening email client…";
+        if (String(result.message || "").toLowerCase().includes("activation")) return;
+        throw new Error(result.message || "Request failed");
+      }
       statusEl.textContent = "Summon sent! Thank you — I will reply soon.";
       form.reset();
       setTimeout(() => setOpen(false), 1800);

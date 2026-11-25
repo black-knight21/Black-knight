@@ -19,7 +19,7 @@ export const projects = [
     description:
       "Windows desktop utility for tuning mouse acceleration curves, managing profiles, and running AI-assisted sensitivity calibration.",
     stack: ["C#", ".NET", "Gemini API", "Git"],
-    url: "https://github.com/black-knight21/KaidenFlux",
+    url: "https://github.com/black-knight21/AimKnight",
   },
   {
     id: "oathkeeper-arena",

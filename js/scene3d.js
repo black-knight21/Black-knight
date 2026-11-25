@@ -147,6 +147,11 @@ export function createArenaScene(canvas, { onProgress, onReady, onImpact }) {
   }
 
   // ─── Load models ───────────────────────────
+  const isGitHubPages = location.hostname.endsWith("github.io");
+  const modelBase = isGitHubPages
+    ? "https://media.githubusercontent.com/media/black-knight21/Black-knight/main/"
+    : "./";
+
   const loader = new GLTFLoader();
   let loadedCount = 0;
   const totalAssets = 2;
@@ -165,7 +170,7 @@ export function createArenaScene(canvas, { onProgress, onReady, onImpact }) {
   state.ivoryPivot = ivoryPivot;
 
   loader.load(
-    "./aurencast__the_ivory_oathkeeper.glb",
+    modelBase + "aurencast__the_ivory_oathkeeper.glb",
     (gltf) => {
       upgradeMaterials(gltf.scene);
       gltf.scene.position.set(0, 0, 0);
@@ -184,7 +189,7 @@ export function createArenaScene(canvas, { onProgress, onReady, onImpact }) {
   state.obsPivot = obsPivot;
 
   loader.load(
-    "./varkhen__the_obsidian_oathbreaker.glb",
+    modelBase + "varkhen__the_obsidian_oathbreaker.glb",
     (gltf) => {
       upgradeMaterials(gltf.scene, obsMeshes);
       gltf.scene.position.set(0, 0, 0);

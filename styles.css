@@ -63,13 +63,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 ul, ol { list-style: none; }
 img, canvas { display: block; }
 
-/* ── Custom cursor — only on pointer-fine devices ── */
-@media (hover: hover) and (pointer: fine) {
-  body, a, button, .project-card, [role="button"] {
-    cursor: none;
-  }
-}
-
 /* ── Global chrome ── */
 
 #arena-canvas {
@@ -338,34 +331,6 @@ img, canvas { display: block; }
   color: var(--muted);
   text-transform: uppercase;
 }
-
-/* ── Custom cursor ── */
-#custom-cursor {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 300;
-  pointer-events: none;
-  display: none;
-  will-change: transform;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  #custom-cursor { display: block; }
-}
-
-.cursor-sword,
-.cursor-ember {
-  position: absolute;
-  top: -14px;
-  left: -14px;
-  transition: opacity 0.15s;
-}
-
-.cursor-ember { opacity: 0; }
-
-#custom-cursor.is-ember .cursor-sword { opacity: 0; }
-#custom-cursor.is-ember .cursor-ember { opacity: 1; }
 
 /* ── Main sections ── */
 #root {

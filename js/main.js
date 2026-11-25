@@ -136,32 +136,6 @@ function triggerBossOverlay(title, url) {
   }, 1920);
 }
 
-// ─── Custom cursor ──────────────────────────────────────────────
-function initCursor() {
-  const cursor = $("#custom-cursor");
-  if (!cursor) return;
-
-  let rafPending = false;
-  let cx = -100, cy = -100;
-
-  document.addEventListener("pointermove", (e) => {
-    cx = e.clientX;
-    cy = e.clientY;
-    if (!rafPending) {
-      rafPending = true;
-      requestAnimationFrame(() => {
-        cursor.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
-        rafPending = false;
-      });
-    }
-  }, { passive: true });
-
-  document.addEventListener("pointerover", (e) => {
-    const isHot = e.target.closest("a, button, .project-card, [role='button']");
-    cursor.classList.toggle("is-ember", !!isHot);
-  }, { passive: true });
-}
-
 // ─── Vital bars fill ────────────────────────────────────────────
 function initVitalBars() {
   const barsEl = $(".vital-bars");
@@ -291,7 +265,6 @@ function initCopyEmail() {
 
 // ─── Boot ────────────────────────────────────────────────────────
 renderProjects();
-initCursor();
 initVitalBars();
 initSectionObserver();
 updateNavLinks("hero");

@@ -69,6 +69,31 @@ function initFilterBar() {
 }
 
 // ─── Project cards ──────────────────────────────────────────────
+function buildThumbnail(item) {
+  if (item.thumbnailType === "image" && item.thumbnailSrc) {
+    return `<div class="card-thumb"><img src="${item.thumbnailSrc}" alt="${item.thumbnailAlt || item.title}" loading="lazy" /></div>`;
+  }
+  if (item.thumbnailType === "docstudio") {
+    return `
+      <div class="card-thumb card-thumb--art" aria-hidden="true">
+        <div class="thumb-mock thumb-mock--doc">
+          <div class="thumb-bar"><span></span><span></span><span></span></div>
+          <div class="thumb-cols">
+            <div class="thumb-side"><i></i><i></i><i></i></div>
+            <div class="thumb-main"><b># DocStudio</b><i></i><i></i></div>
+          </div>
+        </div>
+      </div>`;
+  }
+  return `
+    <div class="card-thumb card-thumb--art" aria-hidden="true">
+      <div class="thumb-mock thumb-mock--arena">
+        <div class="thumb-glow"></div>
+        <span class="thumb-label">WebGL · Three.js</span>
+      </div>
+    </div>`;
+}
+
 function renderProjects() {
   const grid = $("#project-grid");
   if (!grid) return;
@@ -78,16 +103,30 @@ function renderProjects() {
     li.className = "project-card";
     li.setAttribute("role", "listitem");
     li.dataset.category = item.category;
-    li.tabIndex = 0;
+
+    const demoBtn = item.demoUrl
+      ? `<a href="${item.demoUrl}" class="card-btn card-btn--gold" data-title="${item.title}" data-url="${item.demoUrl}">Live Demo ↗</a>`
+      : "";
+    const repoBtn = item.repoUrl
+      ? `<a href="${item.repoUrl}" class="card-btn card-btn--glass" data-title="${item.title}" data-url="${item.repoUrl}">GitHub Repository ↗</a>`
+      : "";
 
     li.innerHTML = `
-      <span class="card-badge">${item.badge}</span>
+      ${buildThumbnail(item)}
+      <div class="card-meta">
+        <span class="card-badge">${item.badge}</span>
+        ${item.status ? `<span class="card-status">${item.status}</span>` : ""}
+      </div>
       <h3 class="card-title">${item.title}</h3>
       <p class="card-desc">${item.description}</p>
+      <p class="card-contrib"><strong>Contribution:</strong> ${item.contribution}</p>
       <div class="card-stack">
         ${item.stack.map((s) => `<span>${s}</span>`).join("")}
       </div>
-      <div class="card-cta">Open project ↗</div>
+      <div class="card-actions">
+        ${demoBtn}
+        ${repoBtn}
+      </div>
     `;
 
     // Mouse-move spotlight
@@ -97,16 +136,12 @@ function renderProjects() {
       li.style.setProperty("--my", e.clientY - rect.top + "px");
     });
 
-    // Click → boss overlay → open URL
-    li.addEventListener("click", (e) => {
-      e.preventDefault();
-      triggerBossOverlay(item.title, item.url);
-    });
-    li.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") {
+    // Action buttons → boss overlay → open URL
+    li.querySelectorAll(".card-btn").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
         e.preventDefault();
-        triggerBossOverlay(item.title, item.url);
-      }
+        triggerBossOverlay(btn.dataset.title, btn.dataset.url);
+      });
     });
 
     grid.appendChild(li);

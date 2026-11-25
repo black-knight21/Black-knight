@@ -1,53 +1,35 @@
-// Personal projects catalog rendered in the portfolio grid
-const projects = [
+export const projects = [
   {
-    id: 1,
-    title: "Restaurant Website",
-    type: "Personal Project",
+    id: "bk-docstudio",
+    title: "BK DocStudio",
+    badge: "Featured Forge",
     category: "web",
-    status: "personal",
-    description: "A personal restaurant website project created to practise website structure, visual design, responsive layouts, and front-end development.",
-    contribution: "I designed and built the website pages, organised the content, created the layout, and worked on the styling and responsive presentation.",
-    stack: ["HTML", "CSS", "JavaScript"],
-    demo: null,
-    source: null
+    categoryLabel: "Web Apps",
+    description:
+      "A structured documentation workspace built for fast technical authoring, live markdown previews, and clean export workflows.",
+    stack: ["HTML5", "CSS3", "JavaScript", "UI/UX"],
+    url: "https://github.com/black-knight21",
   },
   {
-    id: 2,
-    title: "Gaming Website",
-    type: "Personal Project",
-    category: "web",
-    status: "personal",
-    description: "A personal gaming website project created to practise front-end development, page structure, styling, and interactive website features.",
-    contribution: "I planned and built the website structure, created the page layouts, styled the interface, and tested the website while developing it.",
-    stack: ["HTML", "CSS", "JavaScript"],
-    demo: null,
-    source: null
-  },
-  {
-    id: 3,
-    title: "Personal Portfolio Website",
-    type: "Personal Project",
-    category: "uiux",
-    status: "personal",
-    logo: "assets/kb-logo.webp",
-    description: "A personal portfolio website created to present my skills, projects, and development work.",
-    contribution: "I designed and developed the portfolio structure, organised the content, built the page layout, and worked on making the website clear and responsive.",
-    stack: ["HTML", "CSS", "JavaScript"],
-    demo: "https://black-knight21.github.io/Black-knight/",
-    source: "https://github.com/black-knight21/Black-knight"
-  },
-  {
-    id: 4,
-    title: "KaidenFlux",
-    type: "Personal Project",
+    id: "aimknight",
+    title: "AimKnight",
+    badge: "Desktop Tool",
     category: "tools",
-    status: "personal",
-    logo: "assets/kb-logo.webp",
-    description: "A personal Windows desktop application created to configure mouse acceleration curves, manage game profiles, run aim practice tests, and tune settings with an AI assistant powered by the Google Gemini API.",
-    contribution: "I developed the Windows desktop application in C# with WinForms/WPF, built the curve editor, integrated the Gemini API with Windows DPAPI encryption for natural-language tuning, and implemented driver parameter validation.",
-    stack: ["C#", "WPF / WinForms", "Gemini API", "Windows DPAPI", ".NET"],
-    demo: null,
-    source: "https://github.com/black-knight21/KaidenFlux"
-  }
+    categoryLabel: "Tools",
+    description:
+      "Windows desktop utility for tuning mouse acceleration curves, managing profiles, and running AI-assisted sensitivity calibration.",
+    stack: ["C#", ".NET", "Gemini API", "Git"],
+    url: "https://github.com/black-knight21/AimKnight",
+  },
+  {
+    id: "oathkeeper-arena",
+    title: "Oathkeeper Arena UI",
+    badge: "Customizable Slot",
+    category: "web",
+    categoryLabel: "Web Apps",
+    description:
+      "Interactive WebGL dark-fantasy showcase pairing Blender GLB knight models with section-reactive Three.js choreography.",
+    stack: ["Three.js", "WebGL", "ES Modules", "CSS3"],
+    url: "https://github.com/black-knight21/Black-knight",
+  },
 ];

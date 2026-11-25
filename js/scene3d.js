@@ -13,7 +13,7 @@ const lerpV3 = (v, tx, ty, tz, t) => {
 export function createArenaScene(canvas, { onProgress, onReady, onImpact }) {
   // ─── Renderer ──────────────────────────────
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: "high-performance" });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.25));
+  renderer.setPixelRatio(Math.min(devicePixelRatio, innerWidth < 768 ? 1.0 : 1.25));
   renderer.setSize(innerWidth, innerHeight);
   renderer.shadowMap.enabled = false;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -216,17 +216,20 @@ export function createArenaScene(canvas, { onProgress, onReady, onImpact }) {
     const sec = state.section;
     const camCfg = CAM[sec] || CAM.hero;
 
-    // ── Camera lerp ──
+    // ── Camera lerp (pull back slightly on portrait mobile so both knights fit) ──
+    const isPortrait = camera.aspect < 1;
+    const zScale = isPortrait ? Math.min(1.45, 0.9 / Math.max(camera.aspect, 0.45)) : 1;
+    const xScale = isPortrait ? 0.65 : 1;
     const camT = 1 - Math.exp(-2.4 * dt);
     const px = state.pointer.x * 0.12;
     const py = state.pointer.y * 0.07;
-    lerpV3(camera.position, camCfg.pos[0] + px, camCfg.pos[1] + py, camCfg.pos[2], camT);
-    lerpV3(camLookCurrent, camCfg.look[0], camCfg.look[1], camCfg.look[2], camT);
+    lerpV3(camera.position, camCfg.pos[0] * xScale + px, camCfg.pos[1] + py, camCfg.pos[2] * zScale, camT);
+    lerpV3(camLookCurrent, camCfg.look[0] * xScale, camCfg.look[1], camCfg.look[2], camT);
     camera.lookAt(camLookCurrent);
 
     // ── Clash animation ──
-    let ivoryXTarget = IVORY_X[sec] ?? 0;
-    let obsXTarget   = OBS_X[sec] ?? 0;
+    let ivoryXTarget = (IVORY_X[sec] ?? 0) * xScale;
+    let obsXTarget   = (OBS_X[sec] ?? 0) * xScale;
 
     if (state.clashTimer > 0) {
       state.clashTimer -= dt;
@@ -344,6 +347,7 @@ export function createArenaScene(canvas, { onProgress, onReady, onImpact }) {
   function onResize() {
     camera.aspect = innerWidth / innerHeight;
     camera.updateProjectionMatrix();
+    renderer.setPixelRatio(Math.min(devicePixelRatio, innerWidth < 768 ? 1.0 : 1.25));
     renderer.setSize(innerWidth, innerHeight);
   }
   window.addEventListener("resize", onResize);

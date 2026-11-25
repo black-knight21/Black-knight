@@ -364,6 +364,27 @@ function initSummonModal() {
   });
 }
 
+// ─── Mobile nav drawer ──────────────────────────────────────────
+function initMobileNav() {
+  const toggle = $("#nav-toggle");
+  const menu = $("#nav-menu");
+  if (!toggle || !menu) return;
+
+  const setOpen = (open) => {
+    toggle.classList.toggle("is-open", open);
+    menu.classList.toggle("is-open", open);
+    toggle.setAttribute("aria-expanded", open ? "true" : "false");
+  };
+
+  toggle.addEventListener("click", () => {
+    setOpen(!menu.classList.contains("is-open"));
+  });
+
+  menu.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => setOpen(false));
+  });
+}
+
 // ─── Boot ────────────────────────────────────────────────────────
 renderProjects();
 initVitalBars();
@@ -372,3 +393,4 @@ updateNavLinks("hero");
 updateRunePips("hero");
 initToggle3D();
 initSummonModal();
+initMobileNav();

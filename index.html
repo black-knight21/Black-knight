@@ -24,7 +24,7 @@
   }
   </script>
 
-  <link rel="stylesheet" href="styles.css?v=5" />
+  <link rel="stylesheet" href="styles.css?v=6" />
 </head>
 <body>
 
@@ -64,7 +64,7 @@
       <span class="nav-wordmark">Black Knight</span>
     </a>
 
-    <nav aria-label="Main navigation">
+    <nav id="nav-menu" aria-label="Main navigation">
       <a href="#hero"   class="nav-link" data-section="hero">Arena</a>
       <a href="#lore"   class="nav-link" data-section="lore">About</a>
       <a href="#works"  class="nav-link" data-section="works">Works</a>
@@ -72,10 +72,15 @@
       <a href="#grace"  class="nav-link" data-section="grace">Contact</a>
     </nav>
 
-    <button id="toggle-3d" class="pill-btn" aria-label="Toggle 3D rendering mode">
-      <span class="toggle-dot"></span>
-      <span class="toggle-label">3D Active</span>
-    </button>
+    <div class="nav-actions">
+      <button id="toggle-3d" class="pill-btn" aria-label="Toggle 3D rendering mode">
+        <span class="toggle-dot"></span>
+        <span class="toggle-label">3D Active</span>
+      </button>
+      <button id="nav-toggle" class="nav-toggle" aria-label="Open navigation menu" aria-expanded="false" aria-controls="nav-menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
   </header>
 
   <!-- Rune rail (right-side pips) -->
@@ -288,6 +293,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/main.js?v=7"></script>
+  <script type="module" src="js/main.js?v=8"></script>
 </body>
 </html>

@@ -111,6 +111,7 @@ function renderProjects() {
       ? `<a href="${item.repoUrl}" class="card-btn card-btn--glass" data-title="${item.title}" data-url="${item.repoUrl}">GitHub Repository ↗</a>`
       : "";
 
+    const primaryUrl = item.demoUrl || item.repoUrl;
     li.innerHTML = `
       ${buildThumbnail(item)}
       <div class="card-meta">
@@ -128,6 +129,7 @@ function renderProjects() {
         ${repoBtn}
       </div>
     `;
+    li.tabIndex = 0;
 
     // Mouse-move spotlight
     li.addEventListener("mousemove", (e) => {
@@ -136,13 +138,27 @@ function renderProjects() {
       li.style.setProperty("--my", e.clientY - rect.top + "px");
     });
 
-    // Action buttons → boss overlay → open URL
+    // Action buttons → boss overlay → open specific URL
     li.querySelectorAll(".card-btn").forEach((btn) => {
       btn.addEventListener("click", (e) => {
         e.preventDefault();
+        e.stopPropagation();
         triggerBossOverlay(btn.dataset.title, btn.dataset.url);
       });
     });
+
+    // Clicking anywhere else on the card → boss overlay → open primary URL
+    if (primaryUrl) {
+      li.addEventListener("click", () => {
+        triggerBossOverlay(item.title, primaryUrl);
+      });
+      li.addEventListener("keydown", (e) => {
+        if (e.target === li && (e.key === "Enter" || e.key === " ")) {
+          e.preventDefault();
+          triggerBossOverlay(item.title, primaryUrl);
+        }
+      });
+    }
 
     grid.appendChild(li);
   });

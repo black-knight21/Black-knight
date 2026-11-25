@@ -621,6 +621,7 @@ section, footer {
   border-radius: var(--radius);
   backdrop-filter: blur(12px);
   overflow: hidden;
+  cursor: pointer;
   transition: border-color 0.3s, transform 0.3s;
   will-change: transform, opacity;
   backface-visibility: hidden;
